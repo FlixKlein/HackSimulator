@@ -1,0 +1,39 @@
+{
+    "world_computer": [
+        {
+            "accounts": {
+                "root": {
+                    "last_login_time": "17:50:20",
+                    "password": "123456",
+                    "permission": "admin"
+                }
+            },
+            "dirtree": {
+                "directories": {
+                    "dddd": {
+                        "name": "dddd"
+                    }
+                },
+                "name": "/"
+            },
+            "ip": "234.170.116.10",
+            "ip_port": [],
+            "name": "MainFrame"
+        },
+        {
+            "accounts": {
+                "root": {
+                    "last_login_time": "17:50:20",
+                    "password": "1q2w3e4r",
+                    "permission": "admin"
+                }
+            },
+            "dirtree": {
+                "name": "/"
+            },
+            "ip": "234.171.186.11",
+            "ip_port": [],
+            "name": "Webserve"
+        }
+    ]
+}

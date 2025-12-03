@@ -1,7 +1,7 @@
 [Project]
 FileName=cmulator.dev
 Name=cmulator
-UnitCount=6
+UnitCount=7
 Type=1
 Ver=2
 ObjFiles=
@@ -20,7 +20,7 @@ ObjectOutput=
 LogOutput=
 LogOutputEnabled=0
 OverrideOutput=0
-OverrideOutputName=
+OverrideOutputName=cmulator.exe
 HostApplication=
 UseCustomMakefile=0
 CustomMakefile=
@@ -56,14 +56,14 @@ Build=0
 LanguageID=1033
 CharsetID=1252
 CompanyName=
-FileVersion=
+FileVersion=1.0.0.0
 FileDescription=Developed using the Dev-C++ IDE
 InternalName=
 LegalCopyright=
 LegalTrademarks=
 OriginalFilename=
 ProductName=
-ProductVersion=
+ProductVersion=1.0.0.0
 AutoIncBuildNr=0
 SyncProduct=1
 
@@ -92,7 +92,7 @@ DetectEncoding=0
 Encoding=0
 
 [Unit7]
-FileName=CommandDomain.cpp
+FileName=SerializeJson.cpp
 CompileCpp=1
 Folder=
 Compile=1

@@ -2,8 +2,11 @@
 
 namespace Filesystem{
 	//File的函数实现
-	vector<string> File::returnContent(){
-		return content;
+	vector<string> File::returnContent() {
+		return this->content;
+	}
+	const vector<string> File::returnContent() const {
+		return this->content;
 	}
 	File::~File(){
 		
@@ -34,7 +37,13 @@ namespace Filesystem{
 		}
 		return *this;
 	}*/
-	
+	//需要访问private成员，作为成员函数
+	const map<string,unique_ptr<Dir>>& Dir::get_subdir() const {
+		return sub_dir;
+	}
+	const map<string,unique_ptr<File>>& Dir::get_subfile() const {
+		return sub_file;
+	}
 	Dir* Dir::locate_dir_from_now(const string dir_name){
 		auto it = sub_dir.find(dir_name);
 		if(it == sub_dir.end()) return nullptr;
@@ -45,9 +54,58 @@ namespace Filesystem{
 		if(it == sub_file.end()) return nullptr;
 		return it->second.get();
 	}
+	const Dir* Dir::locate_dir_from_now(const string dir_name) const {
+		auto it = sub_dir.find(dir_name);
+		if(it == sub_dir.end()) return nullptr;
+		return it->second.get();
+	}
+	const File* Dir::locate_file_from_now(const string file_name) const {
+		auto it = sub_file.find(file_name);
+		if(it == sub_file.end()) return nullptr;
+		return it->second.get();
+	}
+	unique_ptr<Dir> Dir::clone() const {
+		auto new_dir = make_unique<Dir>(name,nullptr);
+		for(const auto& [key,value] : sub_file ){
+			new_dir->sub_file[key] = make_unique<File>(value->name,value->returnContent());
+		}
+		for(const auto& [key,value] : sub_dir){
+			new_dir->sub_dir[key] = value->clone();
+			new_dir->sub_dir[key]->fath = value.get();
+		}
+		return new_dir;
+	}
 	Dir* Dir::locate_dir_from_path(const string dir_path){
 		if(dir_path.empty()) return this;
 		Dir* current_node = this;
+		string path_to_parsed = dir_path;
+		if(dir_path[0] == '/'){
+			while(current_node->fath != nullptr){
+				current_node = current_node->fath;
+			}
+			path_to_parsed = dir_path.substr(1);
+		}
+		if(path_to_parsed.empty()) return current_node;
+		vector<string> sub_path = split(path_to_parsed,'/');
+		for(auto it : sub_path){
+			if(it.empty()||it=="."){
+				continue;
+			}
+			if(it == ".."){
+				if(current_node->fath != nullptr) current_node = current_node->fath;
+			} else {
+				Dir* next_node = current_node->locate_dir_from_now(it);
+				if(next_node == nullptr){
+					return nullptr;
+				}
+				current_node = next_node;
+			}
+		}
+		return current_node;
+	}
+	const Dir* Dir::locate_dir_from_path(const string dir_path) const {
+		if(dir_path.empty()) return this;
+		Dir* current_node = const_cast<Dir*>(this);
 		string path_to_parsed = dir_path;
 		if(dir_path[0] == '/'){
 			while(current_node->fath != nullptr){
@@ -96,7 +154,29 @@ namespace Filesystem{
 		}
 		return nullptr;
 	}
-	
+	const File* Dir::locate_file_from_path(const string file_path) const {
+		if(file_path.empty()||file_path.back()=='/'){
+			return nullptr;
+		}
+		size_t last_slash_pos = file_path.find_last_of('/');
+		string dir_path;
+		string name;
+		if(last_slash_pos == string::npos){
+			dir_path = ".";
+			name = file_path;
+		} else {
+			dir_path = file_path.substr(0,last_slash_pos);
+			name = file_path.substr(last_slash_pos+1);
+			if(dir_path.empty()){
+				dir_path = "/";
+			}
+		}
+		Dir* current_node = const_cast<Dir*>(locate_dir_from_path(dir_path));
+		if(current_node != nullptr){
+			return current_node->locate_file_from_now(name);
+		}
+		return nullptr;
+	}
 	bool Dir::delete_dir(const string dir_name){
 		size_t erase_count = sub_dir.erase(dir_name);
 		if(erase_count > 0){
@@ -123,7 +203,7 @@ namespace Filesystem{
 		for(auto it : components) res<<it;
 		return res.str();
 	}
-	bool Dir::is_ancestor_of(const Dir* target,const Dir* current){
+	bool Dir::is_ancestor_of(const Dir* target,const Dir* current) const {
 		if(target == nullptr || current == nullptr) return false;
 		const Dir* it = current;
 		while(it != nullptr){

@@ -45,6 +45,11 @@ namespace CommandDomain{
 			return 1;
 		}
 		const string n = args[1];
+		if(n.find('/') != string::npos || n.find('.') != string::npos
+		){
+			cout<<"错误的命名方式，不能含有/或."<<endl;
+			return 1;
+		}
 		auto new_dir = make_unique<Dir>(n);
 		if(session.current_dir->add_dir(move(new_dir))){
 			cout << "目录 '" << n << "' 创建成功。" <<endl;
@@ -148,36 +153,35 @@ namespace CommandDomain{
 		cout<<"输入了错误的参数!"<<endl;
 		return 1;
 	}
-	void search_help_from(const string& n){
-		static const map<string,string> messeges = {
-			{"ls","ls\t显示当前目录下的所有文件和文件夹"},
-			{"mkdir","mkdir [name]\t在当前目录下创建一个文件夹"},
-			{"cd","cd [path]\t切换到特定目录"},
-			{"del","del [path] | [name]\t在当前或特定目录删除文件或文件夹\n可带选项:\n-f | --force\t强制删除，不弹出确认提示"},
-			{"pwd","pwd\t显示当前目录全称"},
-			{"cat","cat [path] | [name]\t在当前或特定目录读取可读文件内容\n可带选项：\n-a | --all\t查看全部内容"},
-			{"exit","exit\t退出命令行，运行关机程序"}
-		};
-		auto it = messeges.find(n);
-		if(it == messeges.end()){
-			cout<<"找不到指令："<<n<<endl;
-			return;
+	int cmd_ipconfig(Session& session,const vector<string>& args){
+		ParsedArgument parsed = parsed_argument(args);
+		bool show_port_only = parsed.flags.count("-p") > 0 || parsed.flags.count("--port") > 0;
+		if(show_port_only){
+			cout<<"Port list :"<<endl;
+			for(const auto& [key,value] : session.current_computer->get_ip_port()){
+				cout<<key<<"\t"<<value<<endl;
+			}
+			return 0;
 		}
-		cout<<it->second<<endl;
-		return;
+		vector<string> tmp = session.current_computer->get_ipconfig();
+		for(auto it : tmp){
+			cout<<it<<endl;
+		}
+		return 0;
 	}
 	int cmd_help(Session&,const vector<string>& args){
 		int n = args.size();
 		if(n == 1){
 			cout<<"有关某个命令的详细信息，请键入 help 命令名"<<endl;
-			cout<<"help\t显示特定指令帮助"<<endl;
-			cout<<"ls\t显示当前目录下的所有文件和文件夹"<<endl;
-			cout<<"mkdir\t创建空文件夹"<<endl;
-			cout<<"cd\t进入特定目录"<<endl;
-			cout<<"del\t删除文件或文件夹"<<endl;
-			cout<<"pwd\t显示当前目录"<<endl;
-			cout<<"cat\t显示可读文件内容"<<endl;
-			cout<<"exit\t退出程序并显示关机选项"<<endl;
+			cout<<"help\t\t显示特定指令帮助"<<endl;
+			cout<<"ls\t\t显示当前目录下的所有文件和文件夹"<<endl;
+			cout<<"mkdir\t\t创建空文件夹"<<endl;
+			cout<<"cd\t\t进入特定目录"<<endl;
+			cout<<"del\t\t删除文件或文件夹"<<endl;
+			cout<<"pwd\t\t显示当前目录"<<endl;
+			cout<<"cat\t\t显示可读文件内容"<<endl;
+			cout<<"ipconfig\t\t显示当前网络信息"<<endl;
+			cout<<"exit\t\t退出程序并显示关机选项"<<endl;
 		} else if(n > 2){
 			cout<<"错误的用法！输入 help 或者 help 命令名"<<endl;
 		} else {
@@ -194,6 +198,7 @@ namespace CommandDomain{
 		commands["help"] = &cmd_help;
 		commands["del"] = &cmd_del;
 		commands["cat"] = &cmd_cat;
+		commands["ipconfig"] = &cmd_ipconfig;
 		commands["exit"] = [](Session&,const vector<string>&) -> int {return -1;};
 	}
 	//执行指令的函数

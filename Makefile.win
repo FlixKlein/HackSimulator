@@ -4,15 +4,15 @@
 CPP      = g++.exe -D__DEBUG__
 CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
-OBJ      = main.o computer.o FileSystem.o CommandDomain.o functionRealize.o
-LINKOBJ  = main.o computer.o FileSystem.o CommandDomain.o functionRealize.o
-LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW32/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW32/mingw32/lib" -g3 -std=c++17 -static
-INCS     = -I"c:/program files (x86)/dev-cpp/mingw32/lib/gcc/mingw32/9.2.0/include" -I"c:/program files (x86)/dev-cpp/mingw32/include" -I"c:/program files (x86)/dev-cpp/mingw32/lib/gcc/mingw32/9.2.0/include-fixed"
-CXXINCS  = -I"c:/program files (x86)/dev-cpp/mingw32/lib/gcc/mingw32/9.2.0/include/c++" -I"c:/program files (x86)/dev-cpp/mingw32/lib/gcc/mingw32/9.2.0/include/c++/mingw32" -I"c:/program files (x86)/dev-cpp/mingw32/lib/gcc/mingw32/9.2.0/include/c++/backward" -I"c:/program files (x86)/dev-cpp/mingw32/lib/gcc/mingw32/9.2.0/include" -I"c:/program files (x86)/dev-cpp/mingw32/include" -I"c:/program files (x86)/dev-cpp/mingw32/lib/gcc/mingw32/9.2.0/include-fixed"
+OBJ      = main.o computer.o FileSystem.o CommandDomain.o functionRealize.o SerializeJson.o
+LINKOBJ  = main.o computer.o FileSystem.o CommandDomain.o functionRealize.o SerializeJson.o
+LIBS     = -L"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/" -L"C:/msys64/mingw64/lib/gcc/" -L"C:/msys64/mingw64/x86_64-w64-mingw32/lib/" -L"C:/msys64/mingw64/lib/" -L"C:/msys64/mingw64/lib" -L"C:/msys64/mingw64/x86_64-w64-mingw32/lib" -g3 -std=c++17 -pthread -static
+INCS     = -I"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include" -I"C:/msys64/mingw64/include" -I"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include-fixed"
+CXXINCS  = -I"C:/msys64/mingw64/include/c++/15.2.0" -I"C:/msys64/mingw64/include/c++/15.2.0/x86_64-w64-mingw32" -I"C:/msys64/mingw64/include/c++/15.2.0/backward" -I"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include" -I"C:/msys64/mingw64/include" -I"C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/15.2.0/include-fixed"
 BIN      = cmulator.exe
-CXXFLAGS = $(CXXINCS) -Wall -Wextra -g3 -std=c++17
+CXXFLAGS = $(CXXINCS) -Wall -Wextra -g3
 ENCODINGS = -finput-charset=utf-8 -fexec-charset=gbk
-CFLAGS   = $(INCS) -Wall -Wextra -g3 -std=c++17
+CFLAGS   = $(INCS) -Wall -Wextra -g3
 RM       = del /q /f
 
 .PHONY: all all-before all-after clean clean-custom
@@ -25,17 +25,20 @@ clean: clean-custom
 $(BIN): $(OBJ)
 	$(CPP) $(LINKOBJ) -o "$(BIN)" $(LIBS)
 
-main.o: main.cpp cmulator.h
+main.o: main.cpp cmulator.h json.hpp
 	$(CPP) -c main.cpp -o main.o $(CXXFLAGS) 
 
-computer.o: computer.cpp cmulator.h
+computer.o: computer.cpp cmulator.h json.hpp
 	$(CPP) -c computer.cpp -o computer.o $(CXXFLAGS) 
 
-FileSystem.o: FileSystem.cpp cmulator.h
+FileSystem.o: FileSystem.cpp cmulator.h json.hpp
 	$(CPP) -c FileSystem.cpp -o FileSystem.o $(CXXFLAGS) 
 
-CommandDomain.o: CommandDomain.cpp cmulator.h
+CommandDomain.o: CommandDomain.cpp cmulator.h json.hpp
 	$(CPP) -c CommandDomain.cpp -o CommandDomain.o $(CXXFLAGS) 
 
-functionRealize.o: functionRealize.cpp cmulator.h
+functionRealize.o: functionRealize.cpp cmulator.h json.hpp
 	$(CPP) -c functionRealize.cpp -o functionRealize.o $(CXXFLAGS) 
+
+SerializeJson.o: SerializeJson.cpp cmulator.h json.hpp
+	$(CPP) -c SerializeJson.cpp -o SerializeJson.o $(CXXFLAGS) 
