@@ -1,29 +1,32 @@
-#include <iostream>
-#include "cmulator.h"
+/*
+|	HackSimulator v0.0.4
+|	
+|	main.cpp
+|	
+|	https://github.com/FlixKlein/HackSimulator
+|	https://gitee.com/rosemarychn/HackSimulator
+|	License : MIT
+|	Personal Blog : https://undertopia.top
+*/
+#include "hacksimulator.h"
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
-
+std::vector<ComputerComponents::Computer> world_computers;
+SessionManager session_manager;
+CommandComponents::CommandProcessor processor(session_manager);
+std::mutex world_mutex;
+std::mutex cout_mutex;
 int main() {
-	init_game();//剧情导向和最开始的加载
-	std::string filename;
-	std::cout<<"输入存档文件名，没有请输入new开始新游戏（你别把存档命名为new）:";
-	std::getline(std::cin,filename);
-	std::vector<ComputerDomain::Computer> world_computers;
-	world_computers = SerializeJson::load_world(filename + ".json");
-	if(filename == "new"){
-		world_computers.emplace_back("MainFrame","root","123456");
-		world_computers.emplace_back("Webserve","root","1q2w3e4r");//这里初始化世界数据到时候我预先存在一个配置文件里
-	}
-	//而且我突然发现ip不能每次都随机数生成，遂配置文件写任务需要的ip，其他的随机生成
-	ComputerDomain::Session session;
-	CommandDomain::CommandProcessor processor;
-	session.connect_to(&world_computers[0]);
-	std::cout << "欢迎来到HackSimulator！已连接到 " << session.current_computer->name << std::endl;
+	show_the_logo();
+	init_game_from_json();
+	int main_session_id = session_manager.create_session(&world_computers[0]);
+	ComputerComponents::Session* session = session_manager.get_session(main_session_id);
+	std::cout << "已连接到 " << session->current_computer->name << std::endl;
 	std::string input;
 	while(true) {
-		std::cout << "[" << session.current_computer->name << " " << session.current_dir->show_path() << "]$ ";
+		std::cout << "[" << session->current_computer->name << " " << session->current_dir->show_path() << "]$ ";
 		std::getline(std::cin, input);
 		        
-		int status = processor.execute(session, input);
+		int status = processor.execute(*session,input);
 		if (status == -1) {
 			std::string filename;
 			std::cout<<"请输入存档文件名，不要有后缀：";

@@ -1,10 +1,20 @@
-#include "cmulator.h"
+/*
+|	HackSimulator v0.0.4
+|	
+|	SerializeJson.cpp
+|	
+|	https://github.com/FlixKlein/HackSimulator
+|	https://gitee.com/rosemarychn/HackSimulator
+|	License : MIT
+|	Personal Blog : https://undertopia.top
+*/
+#include "hacksimulator.h"
 
 namespace SerializeJson{
 	using json = nlohmann::json;
 	using namespace std;
-	using namespace Filesystem;
-	using namespace ComputerDomain;
+	using namespace FileSystem;
+	using namespace ComputerComponents;
 	//游戏全局序列化
 	json serialize_file(const File& file){
 		return json{
@@ -71,7 +81,7 @@ namespace SerializeJson{
 		new_comp.ip = ip;
 		new_comp.ip_port = ip_port;
 		if(j.contains("accounts")){
-			new_comp.accounts = j.at("accounts").get<map<string,Account>>();//注意这里返回类型
+			new_comp.accounts = j.at("accounts").get<unordered_map<string,Account>>();//注意这里返回类型
 		}
 		if(j.contains("dirtree")){
 			new_comp.root = deserialize_dir(j.at("dirtree"),nullptr);

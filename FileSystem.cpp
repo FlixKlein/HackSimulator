@@ -1,6 +1,16 @@
-#include "cmulator.h"
+/*
+|	HackSimulator v0.0.4
+|	
+|	FileSystem.cpp
+|	
+|	https://github.com/FlixKlein/HackSimulator
+|	https://gitee.com/rosemarychn/HackSimulator
+|	License : MIT
+|	Personal Blog : https://undertopia.top
+*/
+#include "hacksimulator.h"
 
-namespace Filesystem{
+namespace FileSystem{
 	//File的函数实现
 	vector<string> File::returnContent() {
 		return this->content;
@@ -38,10 +48,10 @@ namespace Filesystem{
 		return *this;
 	}*/
 	//需要访问private成员，作为成员函数
-	const map<string,unique_ptr<Dir>>& Dir::get_subdir() const {
+	const unordered_map<string,unique_ptr<Dir>>& Dir::get_subdir() const {
 		return sub_dir;
 	}
-	const map<string,unique_ptr<File>>& Dir::get_subfile() const {
+	const unordered_map<string,unique_ptr<File>>& Dir::get_subfile() const {
 		return sub_file;
 	}
 	Dir* Dir::locate_dir_from_now(const string dir_name){
@@ -64,16 +74,18 @@ namespace Filesystem{
 		if(it == sub_file.end()) return nullptr;
 		return it->second.get();
 	}
-	unique_ptr<Dir> Dir::clone() const {
-		auto new_dir = make_unique<Dir>(name,nullptr);
+	unique_ptr<Dir> Dir::clone(Dir* fath) const {
+		auto new_dir = make_unique<Dir>(name,fath);
 		for(const auto& [key,value] : sub_file ){
 			new_dir->sub_file[key] = make_unique<File>(value->name,value->returnContent());
 		}
 		for(const auto& [key,value] : sub_dir){
-			new_dir->sub_dir[key] = value->clone();
-			new_dir->sub_dir[key]->fath = value.get();
+			new_dir->sub_dir[key] = value->clone(new_dir.get());
 		}
 		return new_dir;
+	}
+	unique_ptr<Dir> Dir::clone() const {
+		return this->clone(nullptr);
 	}
 	Dir* Dir::locate_dir_from_path(const string dir_path){
 		if(dir_path.empty()) return this;
