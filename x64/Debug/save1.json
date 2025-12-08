@@ -1,0 +1,223 @@
+{
+    "world_computer": [
+        {
+            "accounts": {
+                "root": {
+                    "last_login_time": "1:36:39",
+                    "password": "123456",
+                    "permission": "admin"
+                }
+            },
+            "dirtree": {
+                "directories": {
+                    "bin": {
+                        "files": {
+                            "help.exe": {
+                                "content": [
+                                    "有关某个命令的详细信息，请键入 help 命令名",
+                                    "help\t\t显示特定指令帮助",
+                                    "ls\t\t显示当前目录下的所有文件和文件夹",
+                                    "mkdir\t\t创建空文件夹",
+                                    "cd\t\t进入特定目录",
+                                    "del\t\t删除文件或文件夹",
+                                    "pwd\t\t显示当前目录",
+                                    "cat\t\t显示可读文件内容",
+                                    "ipconfig\t\t显示当前网络信息",
+                                    "cp\t\t复制文件或者文件夹",
+                                    "start\t\t启动一个后台会话",
+                                    "cl\t\t清空命令行窗口",
+                                    "exec\t\t后台会话运行命令",
+                                    "session\t\t显示线程",
+                                    "exit\t\t退出程序并显示关机选项"
+                                ],
+                                "file_hash": "325a4511",
+                                "name": "help.exe"
+                            }
+                        },
+                        "name": "bin"
+                    },
+                    "home": {
+                        "name": "home"
+                    },
+                    "log": {
+                        "name": "log"
+                    },
+                    "sys": {
+                        "name": "sys"
+                    }
+                },
+                "name": "/"
+            },
+            "ip": "137.29.7.14",
+            "ip_port": [
+                [
+                    21,
+                    false
+                ],
+                [
+                    22,
+                    false
+                ],
+                [
+                    80,
+                    false
+                ],
+                [
+                    88,
+                    false
+                ],
+                [
+                    443,
+                    false
+                ]
+            ],
+            "name": "Fitzgerald"
+        },
+        {
+            "accounts": {
+                "otamass": {
+                    "last_login_time": "1:36:39",
+                    "password": "6&82ywvYG1",
+                    "permission": "admin"
+                }
+            },
+            "dirtree": {
+                "directories": {
+                    "bin": {
+                        "files": {
+                            "help.exe": {
+                                "content": [
+                                    "有关某个命令的详细信息，请键入 help 命令名",
+                                    "help\t\t显示特定指令帮助",
+                                    "ls\t\t显示当前目录下的所有文件和文件夹",
+                                    "mkdir\t\t创建空文件夹",
+                                    "cd\t\t进入特定目录",
+                                    "del\t\t删除文件或文件夹",
+                                    "pwd\t\t显示当前目录",
+                                    "cat\t\t显示可读文件内容",
+                                    "ipconfig\t\t显示当前网络信息",
+                                    "cp\t\t复制文件或者文件夹",
+                                    "start\t\t启动一个后台会话",
+                                    "cl\t\t清空命令行窗口",
+                                    "exec\t\t后台会话运行命令",
+                                    "session\t\t显示线程",
+                                    "exit\t\t退出程序并显示关机选项"
+                                ],
+                                "file_hash": "325a4511",
+                                "name": "help.exe"
+                            }
+                        },
+                        "name": "bin"
+                    },
+                    "home": {
+                        "name": "home"
+                    },
+                    "log": {
+                        "name": "log"
+                    },
+                    "sys": {
+                        "name": "sys"
+                    }
+                },
+                "name": "/"
+            },
+            "ip": "236.210.151.67",
+            "ip_port": [
+                [
+                    21,
+                    false
+                ],
+                [
+                    22,
+                    false
+                ],
+                [
+                    80,
+                    false
+                ],
+                [
+                    88,
+                    false
+                ],
+                [
+                    443,
+                    false
+                ]
+            ],
+            "name": "Otamass"
+        },
+        {
+            "accounts": {
+                "root": {
+                    "last_login_time": "1:36:39",
+                    "password": "1q2w3e4r",
+                    "permission": "admin"
+                }
+            },
+            "dirtree": {
+                "directories": {
+                    "bin": {
+                        "files": {
+                            "help.exe": {
+                                "content": [
+                                    "有关某个命令的详细信息，请键入 help 命令名",
+                                    "help\t\t显示特定指令帮助",
+                                    "ls\t\t显示当前目录下的所有文件和文件夹",
+                                    "mkdir\t\t创建空文件夹",
+                                    "cd\t\t进入特定目录",
+                                    "del\t\t删除文件或文件夹",
+                                    "pwd\t\t显示当前目录",
+                                    "cat\t\t显示可读文件内容",
+                                    "ipconfig\t\t显示当前网络信息",
+                                    "cp\t\t复制文件或者文件夹",
+                                    "start\t\t启动一个后台会话",
+                                    "cl\t\t清空命令行窗口",
+                                    "exec\t\t后台会话运行命令",
+                                    "session\t\t显示线程",
+                                    "exit\t\t退出程序并显示关机选项"
+                                ],
+                                "file_hash": "325a4511",
+                                "name": "help.exe"
+                            }
+                        },
+                        "name": "bin"
+                    },
+                    "home": {
+                        "name": "home"
+                    },
+                    "log": {
+                        "name": "log"
+                    },
+                    "sys": {
+                        "name": "sys"
+                    }
+                },
+                "name": "/"
+            },
+            "ip": "116.244.184.21",
+            "ip_port": [
+                [
+                    21,
+                    false
+                ],
+                [
+                    22,
+                    false
+                ],
+                [
+                    80,
+                    false
+                ],
+                [
+                    88,
+                    false
+                ],
+                [
+                    443,
+                    false
+                ]
+            ],
+            "name": "Webserve"
+        }
+    ]
+}

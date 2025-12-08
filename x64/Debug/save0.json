@@ -1,0 +1,198 @@
+{
+    "is_chinese": true,
+    "prolouge_num": 0,
+    "world_computer": [
+        {
+            "accounts": {
+                "root": {
+                    "last_login_time": "18:43:55",
+                    "password": "123456",
+                    "permission": "admin"
+                }
+            },
+            "dirtree": {
+                "directories": {
+                    "bin": {
+                        "files": {
+                            "help.exe": {
+                                "content": [
+                                    "有关某个命令的详细信息，请键入 help 命令名"
+                                ],
+                                "file_hash": "721f7910",
+                                "name": "help.exe"
+                            },
+                            "nano.exe": {
+                                "content": [],
+                                "file_hash": "596e276d",
+                                "name": "nano.exe"
+                            }
+                        },
+                        "name": "bin"
+                    },
+                    "home": {
+                        "name": "home"
+                    },
+                    "log": {
+                        "name": "log"
+                    },
+                    "sys": {
+                        "name": "sys"
+                    }
+                },
+                "name": "/"
+            },
+            "ip": "250.146.26.53",
+            "ip_port": [
+                [
+                    21,
+                    false
+                ],
+                [
+                    22,
+                    false
+                ],
+                [
+                    80,
+                    false
+                ],
+                [
+                    88,
+                    false
+                ],
+                [
+                    443,
+                    false
+                ]
+            ],
+            "name": "Fitzgerald"
+        },
+        {
+            "accounts": {
+                "otamass": {
+                    "last_login_time": "18:43:55",
+                    "password": "6&82ywvYG1",
+                    "permission": "admin"
+                }
+            },
+            "dirtree": {
+                "directories": {
+                    "bin": {
+                        "files": {
+                            "help.exe": {
+                                "content": [
+                                    "有关某个命令的详细信息，请键入 help 命令名"
+                                ],
+                                "file_hash": "721f7910",
+                                "name": "help.exe"
+                            },
+                            "nano.exe": {
+                                "content": [],
+                                "file_hash": "596e276d",
+                                "name": "nano.exe"
+                            }
+                        },
+                        "name": "bin"
+                    },
+                    "home": {
+                        "name": "home"
+                    },
+                    "log": {
+                        "name": "log"
+                    },
+                    "sys": {
+                        "name": "sys"
+                    }
+                },
+                "name": "/"
+            },
+            "ip": "255.10.157.159",
+            "ip_port": [
+                [
+                    21,
+                    false
+                ],
+                [
+                    22,
+                    false
+                ],
+                [
+                    80,
+                    false
+                ],
+                [
+                    88,
+                    false
+                ],
+                [
+                    443,
+                    false
+                ]
+            ],
+            "name": "Otamass"
+        },
+        {
+            "accounts": {
+                "root": {
+                    "last_login_time": "18:43:55",
+                    "password": "1q2w3e4r",
+                    "permission": "admin"
+                }
+            },
+            "dirtree": {
+                "directories": {
+                    "bin": {
+                        "files": {
+                            "help.exe": {
+                                "content": [
+                                    "有关某个命令的详细信息，请键入 help 命令名"
+                                ],
+                                "file_hash": "721f7910",
+                                "name": "help.exe"
+                            },
+                            "nano.exe": {
+                                "content": [],
+                                "file_hash": "596e276d",
+                                "name": "nano.exe"
+                            }
+                        },
+                        "name": "bin"
+                    },
+                    "home": {
+                        "name": "home"
+                    },
+                    "log": {
+                        "name": "log"
+                    },
+                    "sys": {
+                        "name": "sys"
+                    }
+                },
+                "name": "/"
+            },
+            "ip": "170.66.5.198",
+            "ip_port": [
+                [
+                    21,
+                    false
+                ],
+                [
+                    22,
+                    false
+                ],
+                [
+                    80,
+                    false
+                ],
+                [
+                    88,
+                    false
+                ],
+                [
+                    443,
+                    false
+                ]
+            ],
+            "name": "Webserve"
+        }
+    ]
+}
