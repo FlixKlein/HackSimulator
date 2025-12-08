@@ -6,6 +6,8 @@ release中是window可执行程序和一些dll，剧情文件
 
 其他的是VisualStudio2022项目文件
 
+HackSimulator是源代码，vendor是第三方必要库（imgui，sdl）
+
 第三方库：json，imgui，sdl，magic\_enum
 
 vo.o.1 文件系统的基本完成
