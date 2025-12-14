@@ -1,5 +1,5 @@
 ﻿/*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |	
 |	CommandFunction.cpp
 |	this cpp if for some command functions
@@ -58,10 +58,14 @@ void search_help_from(const string& n){
 		{"cp","cp [source] [target]\t将源复制到目标"},
 		{"cl","cl\t清空命令行窗口"}, 
 		{"user","user\t与用户有关的指令\n可带选项：\n-all | --all\t列出所有用户\n-add | --add [username] 添加用户无初始密码\n-del | --delete [username]\t删除用户\n	-p | --promote [username]\t向上提升用户一个等级权限"},
+		{"ping","ping [ip]\t测试与目标主机的连通性"},
+		{"passwd","passwd [username]\t修改当前用户密码"},
+		{"read","read [num]\t阅读剧情"},
 		//{"connect","connect [ip]\t连接到特定IP的计算机"},
 		//{"disconnect","disconnect\t断开当前连接的计算机"},
-		{"login","login [username] [password]\t登录到当前连接的计算机"},
-		{"logout","logout\t登出当前连接的计算机"},
+		{"login","login [username] [password]\t登录到当前连接的计算机指定账户"},
+		{"logout","logout\t登出当前账户"},
+		{"touch","touch [name]\t在当前文件夹下创建空白文件"},
 		{"help","help [command]\t显示帮助信息"},
 		{"time","time\t显示当前系统时间"},
 		{"session","session\t管理后台会话\n可带选项：\n-l | --list\t列出所有后台会话\n-k | --kill [id]\t终止后台会话[id]"},

@@ -1,5 +1,5 @@
 /*
-|	HackSimulator v0.0.4
+|	HackSimulator v0.0.6
 |
 |	CodingFunction.cpp
 	this cpp is for some coding functions

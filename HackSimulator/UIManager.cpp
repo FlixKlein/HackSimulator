@@ -1,5 +1,5 @@
 ﻿/*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |
 |	UIManager.cpp
 	this cpp implements UIManager and UIWindow
@@ -143,14 +143,9 @@ void UIManager::render_all() {
     {
         std::lock_guard<std::mutex> lock(windows_mutex);
 
-        for (auto it = windows.begin(); it != windows.end(); ) {
-            // it->second 是 std::unique_ptr<UIWindow>
-            it->second->render();
-            if (!it->second->is_open) {
-                it = windows.erase(it);
-            }
-            else {
-                ++it;
+        for (auto& [title,window_ptr] : windows) {
+            if (window_ptr->is_open) {
+				window_ptr->render();
             }
         }
     }

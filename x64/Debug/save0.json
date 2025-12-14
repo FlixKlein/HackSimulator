@@ -1,13 +1,74 @@
 {
     "is_chinese": true,
-    "prolouge_num": 0,
+    "netnodes": {
+        "100.217.18.87": {
+            "ip": "100.217.18.87",
+            "name": "Webserve",
+            "online": true,
+            "ports": [],
+            "resource": 65536
+        },
+        "130.2.33.15": {
+            "ip": "130.2.33.15",
+            "name": "Fitzgerald",
+            "online": true,
+            "packets": [
+                {
+                    "dest_ip": "130.2.33.15",
+                    "metadata": {
+                        "type": "ping"
+                    },
+                    "payload": "ping",
+                    "source_ip": "130.2.33.15",
+                    "ttl": 29
+                },
+                {
+                    "dest_ip": "130.2.33.15",
+                    "metadata": {
+                        "type": "ping"
+                    },
+                    "payload": "ping",
+                    "source_ip": "130.2.33.15",
+                    "ttl": 29
+                },
+                {
+                    "dest_ip": "130.2.33.15",
+                    "metadata": {
+                        "type": "ping"
+                    },
+                    "payload": "ping",
+                    "source_ip": "130.2.33.15",
+                    "ttl": 29
+                },
+                {
+                    "dest_ip": "130.2.33.15",
+                    "metadata": {
+                        "type": "ping"
+                    },
+                    "payload": "ping",
+                    "source_ip": "130.2.33.15",
+                    "ttl": 29
+                }
+            ],
+            "ports": [],
+            "resource": 65408
+        },
+        "221.8.230.92": {
+            "ip": "221.8.230.92",
+            "name": "Otamass",
+            "online": true,
+            "ports": [],
+            "resource": 65536
+        }
+    },
+    "prolouge_num": 3,
     "world_computer": [
         {
             "accounts": {
                 "root": {
-                    "last_login_time": "18:43:55",
+                    "last_login_time": "23:4:51",
                     "password": "123456",
-                    "permission": "admin"
+                    "permission": "Admin"
                 }
             },
             "dirtree": {
@@ -33,6 +94,32 @@
                         "name": "home"
                     },
                     "log": {
+                        "files": {
+                            "Command.log": {
+                                "content": [
+                                    "[23:4:58] User=root IP=130.2.33.15 CMD=ipconfig",
+                                    "[23:5:6] User=root IP=130.2.33.15 CMD=ping 130.2.33.15",
+                                    "[23:5:23] User=root IP=130.2.33.15 CMD=cat /log/Network.log -a",
+                                    "[23:5:33] User=root IP=130.2.33.15 CMD=exit"
+                                ],
+                                "file_hash": "86883eff",
+                                "name": "Command.log"
+                            },
+                            "Network.log": {
+                                "content": [
+                                    "[23:5:6] 发送数据包到 130.2.33.15 , 延迟 290 ms, TTL 29 payload: ping",
+                                    "[23:5:6] 接收数据包来自 130.2.33.15 , 延迟 300 ms, TTL 29 payload: ping",
+                                    "[23:5:6] 发送数据包到 130.2.33.15 , 延迟 339 ms, TTL 29 payload: ping",
+                                    "[23:5:6] 接收数据包来自 130.2.33.15 , 延迟 349 ms, TTL 29 payload: ping",
+                                    "[23:5:7] 发送数据包到 130.2.33.15 , 延迟 137 ms, TTL 29 payload: ping",
+                                    "[23:5:7] 接收数据包来自 130.2.33.15 , 延迟 147 ms, TTL 29 payload: ping",
+                                    "[23:5:7] 发送数据包到 130.2.33.15 , 延迟 494 ms, TTL 29 payload: ping",
+                                    "[23:5:7] 接收数据包来自 130.2.33.15 , 延迟 504 ms, TTL 29 payload: ping"
+                                ],
+                                "file_hash": "2ab27138",
+                                "name": "Network.log"
+                            }
+                        },
                         "name": "log"
                     },
                     "sys": {
@@ -41,7 +128,7 @@
                 },
                 "name": "/"
             },
-            "ip": "250.146.26.53",
+            "ip": "130.2.33.15",
             "ip_port": [
                 [
                     21,
@@ -64,14 +151,15 @@
                     false
                 ]
             ],
+            "login": "root",
             "name": "Fitzgerald"
         },
         {
             "accounts": {
                 "otamass": {
-                    "last_login_time": "18:43:55",
+                    "last_login_time": "23:4:51",
                     "password": "6&82ywvYG1",
-                    "permission": "admin"
+                    "permission": "Admin"
                 }
             },
             "dirtree": {
@@ -96,16 +184,13 @@
                     "home": {
                         "name": "home"
                     },
-                    "log": {
-                        "name": "log"
-                    },
                     "sys": {
                         "name": "sys"
                     }
                 },
                 "name": "/"
             },
-            "ip": "255.10.157.159",
+            "ip": "221.8.230.92",
             "ip_port": [
                 [
                     21,
@@ -128,14 +213,15 @@
                     false
                 ]
             ],
+            "login": "otamass",
             "name": "Otamass"
         },
         {
             "accounts": {
                 "root": {
-                    "last_login_time": "18:43:55",
+                    "last_login_time": "23:4:51",
                     "password": "1q2w3e4r",
-                    "permission": "admin"
+                    "permission": "Admin"
                 }
             },
             "dirtree": {
@@ -160,16 +246,13 @@
                     "home": {
                         "name": "home"
                     },
-                    "log": {
-                        "name": "log"
-                    },
                     "sys": {
                         "name": "sys"
                     }
                 },
                 "name": "/"
             },
-            "ip": "170.66.5.198",
+            "ip": "100.217.18.87",
             "ip_port": [
                 [
                     21,
@@ -192,6 +275,7 @@
                     false
                 ]
             ],
+            "login": "root",
             "name": "Webserve"
         }
     ]

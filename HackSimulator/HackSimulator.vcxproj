@@ -151,6 +151,7 @@
     <ClCompile Include="CommandFunction.cpp" />
     <ClCompile Include="HackSimulator.cpp" />
     <ClCompile Include="InitFunction.cpp" />
+    <ClCompile Include="Net.cpp" />
     <ClCompile Include="SerializeJson.cpp" />
     <ClCompile Include="SessionManager.cpp" />
     <ClCompile Include="StoryFunction.cpp" />

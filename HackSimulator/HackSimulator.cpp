@@ -1,7 +1,7 @@
 ﻿/*
-|	HackSimulator v0.0.4
+|	HackSimulator v0.0.6
 |
-|	main.cpp
+|	HackSimulator.cpp
 |
 |	https://github.com/FlixKlein/HackSimulator
 |	https://gitee.com/rosemarychn/HackSimulator
@@ -12,8 +12,10 @@
 #include "UIManager.h"
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 std::vector<ComputerComponents::Computer> world_computers;
+std::mt19937 rng(static_cast<unsigned int>(std::chrono::steady_clock::now().time_since_epoch().count()));
 SessionManager session_manager;
 CommandComponents::CommandProcessor processor(session_manager);
+std::unordered_map<std::string, std::unique_ptr<Net::NetNode>> netnodes;
 bool is_chinese;
 int prolouge_num;
 std::mutex world_mutex;
@@ -40,7 +42,7 @@ int main() {
 			std::string filename;
 			std::cout << "请输入存档文件名，不要有后缀：";
 			std::getline(std::cin, filename);
-			SerializeJson::save_world(world_computers, filename + ".json");
+			SerializeJson::save_world(world_computers, netnodes,filename + ".json");
 			std::cout << "请关闭图形界面窗口以退出程序" << std::endl;
 			break;
 		}

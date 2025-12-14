@@ -1,5 +1,5 @@
 /*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |
 |	InitFunction.cpp
 	this cpp is for initialization functions
@@ -28,11 +28,9 @@ namespace Init {
 		for (auto& computer : world_computers) {
 			Dir* root = computer.get_root();
 			unique_ptr<Dir> bin = make_unique<Dir>("bin", root);
-			unique_ptr<Dir> log = make_unique<Dir>("log", root);
 			unique_ptr<Dir> sys = make_unique<Dir>("sys", root);
 			unique_ptr<Dir> home = make_unique<Dir>("home", root);
 			root->add_dir(move(bin));
-			root->add_dir(move(log));
 			root->add_dir(move(sys));
 			root->add_dir(move(home));
 			unique_ptr<File> help = make_unique<File>("help.exe", vector<string>{
@@ -44,7 +42,9 @@ namespace Init {
 			unique_ptr<File> nano = make_unique<File>("nano.exe");
 			nano->file_hash = app_hash_map["nano.exe"];
 			root->locate_dir_from_now("bin")->add_file(move(nano));
-
+			unique_ptr<Net::NetNode> netnode = make_unique<Net::NetNode>(computer.get_ip(), computer.name);
+			netnode->bind_host(&computer);
+			netnodes[computer.get_ip()] = move(netnode);
 		}
 	}
 	void init_game_from_json() {
@@ -58,10 +58,10 @@ namespace Init {
 			if (lg == "en") is_chinese = false;
 			else is_chinese = true;
 			init_first_time();
-			prolouge_num = 0;
-			cout << "请输入存档文件名,游戏会创建新的存档 \n Please enter the save file name; the game will create a new save file.:";
+			prolouge_num = 3;
+			cout << "请输入存档文件名,游戏会创建新的存档 \nPlease enter the save file name; the game will create a new save file.:";
 			getline(cin, filename);
-			save_world(world_computers, filename + ".json");
+			save_world(world_computers,netnodes,filename + ".json");
 			cout << "\n初始账户：root 密码：123456" << endl;
 			type_text("...", 1000);
 			Story::show_the_background();
@@ -74,5 +74,6 @@ namespace Init {
 		}
 		filename = args[1];
 		world_computers = load_world(filename + ".json");
+		netnodes = load_net(filename + ".json");
 	}
 }

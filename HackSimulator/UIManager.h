@@ -1,5 +1,5 @@
 ﻿/*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |
 |	UIManager.h
 |	this is the UI-related header file of HackSimulator
@@ -81,6 +81,7 @@ public:
         std::lock_guard<std::mutex> lock(windows_mutex);
         auto it = windows.find(title);
         if (it != windows.end()) {
+			it->second->is_open = true; // 如果窗口已经存在，确保它是打开的
             return dynamic_cast<T*>(it->second.get());
         }
         auto new_window = std::make_unique<T>(title);

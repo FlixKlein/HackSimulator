@@ -1,5 +1,5 @@
 ﻿/*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |	
 |	FileSystem.cpp
 |   this cpp implements File and Dir classes

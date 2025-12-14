@@ -1,5 +1,5 @@
 ﻿/*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |	
 |	CommandComponents.cpp
 |	this cpp implements some command functions
@@ -183,6 +183,31 @@ namespace CommandComponents{
 		}
 		return 0;
 	}
+	int cmd_ping(Session& session, const vector<string>& args) {
+		ParsedArgument parsed = parsed_argument(args);
+		if(parsed.arguments.size() < 1){
+			cout<<"缺少必要的参数，输入help ping以查看帮助"<<endl;
+			return 1;
+		}
+		const string& target_ip = parsed.arguments[0];
+		if(!netnodes.contains(target_ip)){
+			cout<<"无法ping通 "<<target_ip<<"，目标主机不可达"<<endl;
+			return 1;
+		}
+		cout << "正在 Ping " << target_ip << " 具有 32 字节的数据:" << endl;
+		for(int i = 0;i<4;i++){
+			Net::Packet packet(session.current_computer->get_ip(), target_ip, "ping");
+			packet.set_meta("type", "ping");
+			bool send = netnodes[session.current_computer->get_ip()]->send(packet);
+			if (send) {
+				cout << "来自 " << target_ip << " 的回复: 字节=32 时间=" << packet.ms << "ms TTL=" << packet.ttl << endl;
+			}
+			else {
+				cout << "请求超时。" << endl;
+			}
+		}
+		return 0;
+	}
 	/*int cmd_wget(Session& session,const vector<string>& args){
 		
 	}*/
@@ -274,7 +299,7 @@ namespace CommandComponents{
 		bool flag_add = parsed.options.count("-add") > 0 || parsed.options.count("--add") > 0;
 		bool flag_del = parsed.options.count("-del") > 0 || parsed.options.count("--delete") > 0;
 		bool flag_promote = parsed.options.count("-p") > 0 || parsed.options.count("--promote") > 0;
-		if(!flag_add && !flag_del && !flag_all){
+		if(!flag_add && !flag_del && !flag_all && !flag_promote){
 			cout << "错误的参数！" << endl;
 			return 1;
 		}
@@ -292,7 +317,7 @@ namespace CommandComponents{
 				cout << "错误，用户已存在！" << endl;
 				return 1;
 			}
-			if(session.current_computer->login != magic_enum::enum_name(Permission_level::Admin)){
+			if(session.current_computer->get_account()[session.current_computer->login].permission != Permission_level::Admin){
 				cout << "错误，权限不足！" << endl;
 				return 1;
 			}
@@ -304,13 +329,25 @@ namespace CommandComponents{
 				cout << "错误，用户不存在！" << endl;
 				return 1;
 			}
-			if(session.current_computer->login != magic_enum::enum_name(Permission_level::Admin)){
+			if(session.current_computer->get_account()[session.current_computer->login].permission != Permission_level::Admin){
 				cout << "错误，权限不足！" << endl;
 				return 1;
 			}
 			if(it->second == session.current_computer->login){
 				cout << "错误，无法删除当前登录用户！" << endl;
 				return 1;
+			}
+			if (session.current_computer->get_account()[it->second].permission == Permission_level::Admin) {
+				int cnt = 0;
+				for(const auto& [n,a] : session.current_computer->get_account()){
+					if(a.permission == Permission_level::Admin){
+						cnt++;
+					}
+				}
+				if(cnt <= 1){
+					cout << "错误，无法删除最后一个管理员用户！" << endl;
+					return 1;
+				}
 			}
 			session.current_computer->get_account().erase(it->second);
 			return 0;
@@ -320,7 +357,7 @@ namespace CommandComponents{
 				cout << "错误，用户不存在！" << endl;
 				return 1;
 			}
-			if (session.current_computer->login != magic_enum::enum_name(Permission_level::Admin)) {
+			if (session.current_computer->get_account()[session.current_computer->login].permission != Permission_level::Admin) {
 				cout << "错误，权限不足！" << endl;
 				return 1;
 			}
@@ -331,6 +368,72 @@ namespace CommandComponents{
 			session.current_computer->get_account()[it->second].permission = static_cast<Permission_level>(static_cast<int>(session.current_computer->get_account()[it->second].permission) + 1);
 			return 0;
 		}
+	}
+	int cmd_passwd(Session& session, const vector<string>& args) {
+		ParsedArgument parsed = parsed_argument(args);
+		if(parsed.arguments.size() != 1){
+			cout<<"错误的参数，输入help passwd以查看帮助"<<endl;
+			return 1;
+		}
+		//passwd [account]
+		const string& account_name = parsed.arguments[0];
+		if(session.current_computer->get_account().count(account_name) == 0){
+			cout<<"错误，用户不存在！"<<endl;
+			return 1;
+		}
+		if (session.current_computer->get_account()[session.current_computer->login].permission != Permission_level::Admin) {
+			cout<<"错误，权限不足！"<<endl;
+			return 1;
+		}
+		cout << "请输入新密码：";
+		string new_password;
+		getline(cin, new_password);
+		session.current_computer->get_account()[account_name].password = new_password;
+		return 0;
+	}
+	int cmd_login(Session& session, const vector<string>& args) {
+		ParsedArgument parsed = parsed_argument(args);
+		if (parsed.arguments.size() < 2) {
+			cout << "错误的参数，输入help login获取帮助" << endl;
+			return 1;
+		}
+		const string& name = parsed.arguments[0];
+		const string& pass = parsed.arguments[1];
+		if (session.current_computer->login == name) {
+			cout << "已在账户 " << name << " 上" << endl;
+			return 1;
+		}
+		for (auto& [n,acc] : session.current_computer->get_account()) {
+			if (n == name && acc.password == pass) {
+				session.current_computer->login = name;
+				cout << "已切换到账户 " << name << endl;
+				return 0;
+			}
+		}
+		cout << "不存在账户 " << name << " 或者密码错误" << endl;
+		return 1;
+	}
+	int cmd_logout(Session& session, const vector<string>& args) {
+		session.current_computer->login = "";
+		cout << "已退出登录" << endl;
+		return 0;
+	}
+	int cmd_touch(Session& session, const vector<string>& args) {
+		if (args.size() < 2){
+			cout << "缺少参数" << endl;
+			return 1;
+		}
+		const string& n = args[1];
+		if (n.find('/') != string::npos) {
+			cout << "错误的命名方式，不能含有/" << endl;
+			return 1;
+		}
+		unique_ptr<File> f = make_unique<File>(n);
+		if (session.current_dir->add_file(move(f))) {
+			cout << "成功创建" << endl;;
+			return 0;
+		}
+		return 1;
 	}
 	
 	CommandProcessor::CommandProcessor(SessionManager& sm){
@@ -343,46 +446,48 @@ namespace CommandComponents{
 		commands["cat"] = &cmd_cat;
 		commands["ipconfig"] = &cmd_ipconfig;
 		commands["cp"] = &cmd_cp;
+		commands["ping"] = &cmd_ping;
 		commands["user"] = &cmd_user; 
+		commands["passwd"] = &cmd_passwd; 
+		commands["login"] = &cmd_login;
+		commands["logout"] = &cmd_logout;
+		commands["touch"] = &cmd_touch;
 		commands["cl"] = [](Session&,const vector<string>&) -> int {
 			cls();
 			return 0;
 			};
-		commands["start"] = [&sm](Session& session,const vector<string>&) -> int {
-			sm.create_session(session.current_computer);
-			cout<<"后台会话已启动"<<endl;
-			return 0;
-		};
-		commands["exec"] = [this,&sm](Session& current,const vector<string>& args) -> int {
-			if(args.size()<3){
-				cout<<"参数错误！"<<endl;
+		commands["exec"] = [this, &sm](Session& current, const vector<string>& args) -> int {
+			if (args.size() < 3) {
+				cout << "参数错误！" << endl;
 				return 1;
 			}
-			try{
+			try {
 				int id = stoi(args[1]);
 				Session* target = sm.get_session(id);
 				stringstream command_build;
-				for(size_t i = 2;i<args.size();i++){
-					command_build<<args[i]<<" ";
+				for (size_t i = 2; i < args.size(); i++) {
+					command_build << args[i] << " ";
 				}
 				string str = command_build.str();
 				str.pop_back();
-				if(target == nullptr){
-					cout<<"错误，找不到会话"<<endl;
+				if (target == nullptr) {
+					cout << "错误，找不到会话" << endl;
 					return 1;
-				} else {
-					this->execute_background(*target,str,current);
 				}
-			} catch(const exception& e){
-				cout<<"错误，无效的会话"<<endl;
+				else {
+					this->execute_background(*target, str, current);
+				}
+			}
+			catch (const exception& e) {
+				cout << "错误，无效的会话" << endl;
 				return 1;
 			}
 			return 0;
-		};
-		commands["session"] = [&sm](Session&,const vector<string>&) -> int {
+			};
+		commands["session"] = [&sm](Session&, const vector<string>&) -> int {
 			sm.list_session();
 			return 0;
-		};
+			};
 		commands["read"] = [](Session&, const vector<string>& args) -> int {
 			if (args.size() < 2) {
 				cout << "错误的参数！" << endl;
@@ -390,6 +495,10 @@ namespace CommandComponents{
 			}
 			try {
 				int num = stoi(args[1]);
+				if (num < 0 || num > prolouge_num) {
+					cout << "错误，章节编号无效！" << endl;
+					return 1;
+				}
 				show_story(num);
 			}
 			catch (const std::exception& e) {
@@ -400,31 +509,31 @@ namespace CommandComponents{
 		};
 		commands["exit"] = [](Session&,const vector<string>&) -> int {return -1;};
 	}
-	int CommandProcessor::execute_background(Session& session,const string cmd,Session& main_session){
-		if(session.is_busy){
-			cout<<"错误，会话忙碌中"<<endl;
+	//执行指令的函数
+	int CommandProcessor::execute_background(Session& session, const string cmd, Session& main_session) {
+		if (session.is_busy) {
+			cout << "错误，会话忙碌中" << endl;
 			return 1;
 		}
-		thread t([this,&session,cmd,main_session_ptr = &main_session](){
+		thread t([this, &session, cmd, main_session_ptr = &main_session]() {
 			session.is_busy = true;
 			{
 				lock_guard<mutex> lock(cout_mutex);
-				cout<<endl;
+				cout << endl;
 			}
-			this->execute(session,cmd);
+			this->execute(session, cmd);
 			{
 				lock_guard<mutex> lock(cout_mutex);
 				session.is_busy = false;
 				if (main_session_ptr && main_session_ptr->current_computer && main_session_ptr->current_dir) {
-				    std::cout << "[" << main_session_ptr->current_computer->name << " " 
-				        << main_session_ptr->current_dir->show_path() << "]$ " << std::flush;
+					std::cout << "[" << main_session_ptr->current_computer->name << " "
+						<< main_session_ptr->current_dir->show_path() << "]$ " << std::flush;
 				}
 			}
-		});
+			});
 		t.detach();
 		return 0;
 	}
-	//执行指令的函数
 	int CommandProcessor::execute(Session& session,const string cmd){
 		auto parts = split(cmd,' ');
 		if(parts.empty()){
@@ -433,11 +542,17 @@ namespace CommandComponents{
 		const string name = parts[0];//指令名字
 		auto it = commands.find(name);
 		if(it != commands.end()){
-			if(name == "mkdir" || name == "del" || name == "cp"){
-				lock_guard<mutex> lock(world_mutex);
-				return it->second(session,parts);
-			} else {
-				return it->second(session,parts);
+			if (session.current_computer) {
+				stringstream log_ss;
+				log_ss << "User=" << session.current_computer->login << " IP=" << session.current_computer->get_ip() << " CMD=" << cmd;
+				session.current_computer->write_log(LogTarget::Command, log_ss.str());
+				if (name == "mkdir" || name == "del" || name == "cp") {
+					lock_guard<mutex> lock(world_mutex);
+					return it->second(session, parts);
+				}
+				else {
+					return it->second(session, parts);
+				}
 			}
 			
 		} else {

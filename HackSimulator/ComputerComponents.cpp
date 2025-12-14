@@ -1,5 +1,5 @@
 ﻿/*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |
 |	ComputerComponents.cpp
 |	this cpp implements Computer and Session classes
@@ -36,27 +36,24 @@ namespace ComputerComponents {
 		};
 		accounts[usrn] = account;
 		id += 1;
-		ip = id_to_ip(id);
 		login = usrn;
+		ip = id_to_ip(id);
 		ip_port[21] = false;
 		ip_port[22] = false;
 		ip_port[80] = false;
 		ip_port[88] = false;
 		ip_port[443] = false;
 	}
-	//下面这几个都是权限极高的函数，不得不说完全是丢掉了类的封闭性，不过目前没有更好的处理办法暂且如此吧
 	const string Computer::get_ip() const {
 		return ip;
 	}
-	void Computer::change_ip(const string& ip) {
-		this->ip = ip;
-		return;
-	}
-	void Computer::change_port(int port, bool state) {
-		ip_port[port] = state;
-		return;
+	string& Computer::get_ip() {
+		return ip;
 	}
 	const map<int, bool> Computer::get_ip_port() const {
+		return ip_port;
+	}
+	map<int, bool>& Computer::get_ip_port() {
 		return ip_port;
 	}
 	const vector<string> Computer::get_ipconfig() const {
@@ -75,12 +72,8 @@ namespace ComputerComponents {
 		}
 		return res;
 	}
-	unordered_map<string, Account> Computer::get_account() {
-		unordered_map<string, Account> res;
-		for (auto& [key, value] : accounts) {
-			res[key] = value;
-		}
-		return res;
+	unordered_map<string, Account>& Computer::get_account() {
+		return accounts;
 	}
 	//account的序列化实现，由于ADL(参数依赖查找，json那个库使用的）特性，我必须把它放在Account所在的命名空间里
 	void to_json(json& j, const Account& acc) {
@@ -102,6 +95,36 @@ namespace ComputerComponents {
 	Computer::~Computer() {
 
 	}
+	void Computer::write_log(const LogTarget l,const string& s){
+		string log_ss;
+		log_ss = "[" + get_time() + "] " + s;
+		string filename;
+		switch(l){
+			case LogTarget::System:
+				filename = "System.log";
+				break;
+			case LogTarget::Command:
+				filename = "Command.log";
+				break;
+			case LogTarget::Application:
+				filename = "Application.log";
+				break;
+			case LogTarget::Network:
+				filename = "Network.log";
+				break;
+		}
+		auto it = root->locate_dir_from_now("log");
+		if (!it) {
+			root->add_dir(make_unique<Dir>("log", root.get()));
+			it = root->locate_dir_from_now("log");
+		}
+		auto log_file = it->locate_file_from_now(filename);
+		if(!log_file){
+			it->add_file(make_unique<File>(filename, vector<string>{}));
+			log_file = it->locate_file_from_now(filename);
+		}
+		log_file->content.push_back(to_utf8(log_ss));
+	}
 
 	void Session::connect_to(Computer* target) {
 		current_computer = target;
@@ -114,4 +137,5 @@ namespace ComputerComponents {
 		current_computer = nullptr;
 		current_dir = nullptr;
 	}
+	
 }

@@ -1,5 +1,5 @@
 ﻿/*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |
 |	StoryFunction.cpp
 	this cpp is for some Story functions

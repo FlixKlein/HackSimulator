@@ -1,5 +1,5 @@
 ﻿/*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |
 |	hacksimulator.h
 |	this is the main header file of HackSimulator
@@ -24,6 +24,7 @@
 #include <random> // random_device mt19937
 #include <set> // set
 #include "json.hpp"
+#include <deque> // deque
 #include <fstream> // ofstream
 #include <ctime> // time_t time tm
 #include <thread> // this_thread::sleep_for
@@ -34,6 +35,7 @@
 #include <string_view> // string_view
 #include <locale>
 #include <codecvt>
+#include <Windows.h> // sleep
 #include "UIManager.h"
 #include "magic_enum.hpp" // magic_enum::enum_name magic_enum::enum_cast<>
 
@@ -59,13 +61,15 @@ namespace ComputerComponents {
 	class Session;
 	struct Account;
 	enum class Permission_level;
+	enum class LogTarget;
 }
 namespace CommandComponents {
 	class CommandProcessor;
 	struct ParsedArgument;
 }
 namespace Net {
-
+	struct Packet;
+	class NetNode;
 }
 namespace Apps {
 	class IApplication;//一个抽象基类，描述应用
@@ -79,12 +83,17 @@ namespace SerializeJson {
 	json serialize_file(const FileSystem::File& file);
 	json serialize_dir(const FileSystem::Dir& dir);
 	json serialize_computer(const ComputerComponents::Computer& computer);
-	void save_world(const std::vector<ComputerComponents::Computer>& world_computers, const std::string filename);
+	json serialize_packet(const Net::Packet& packet);
+	json serialize_netnode(const Net::NetNode& netnode);
+	void save_world(const std::vector<ComputerComponents::Computer>& world_computers, const std::unordered_map<std::string,std::unique_ptr<Net::NetNode>>& netnodes,const std::string filename);
 
 	std::unique_ptr<FileSystem::File> deserialize_file(const json& j);
 	std::unique_ptr<FileSystem::Dir> deserialize_dir(const json& j, FileSystem::Dir* fath);
 	ComputerComponents::Computer deserialize_computer(const json& j);
+	Net::Packet deserialize_packet(const json& j);
+	std::unique_ptr<Net::NetNode> deserialize_netnode(const json& j, ComputerComponents::Computer* comp);
 	std::vector<ComputerComponents::Computer> load_world(const std::string filename);
+	std::unordered_map<std::string, std::unique_ptr<Net::NetNode>> load_net(const std::string filename);
 }
 namespace FileSystem {
 	using namespace std;
@@ -97,8 +106,8 @@ namespace FileSystem {
         vector<string> returnContent();
         const vector<string> returnContent() const;
         ~File();
-    private:
-        int size;
+	//为了游戏方便，设置public算了
+		size_t size;
         vector<string> content;
     };
 	class Dir {
@@ -155,9 +164,9 @@ namespace ComputerComponents {
 	};
 	//account的序列化实现，由于ADL(参数依赖查找，json那个库使用的）特性，我必须把它放在Account所在的命名空间里
 	NLOHMANN_JSON_SERIALIZE_ENUM(Permission_level, {
-		{Permission_level::Guest , "guest"},
-		{Permission_level::User , "user"},
-		{Permission_level::Admin , "admin"},
+		{Permission_level::Guest , "Guest"},
+		{Permission_level::User , "User"},
+		{Permission_level::Admin , "Admin"},
 		})
 	void to_json(json& j, const Account& acc);
 	void from_json(const json& j, Account& acc);
@@ -169,26 +178,27 @@ namespace ComputerComponents {
 		Computer(const string n, const string usrn = "root", const string pswd = "admin123");
 		Computer(const Computer& other) = delete;//禁止拷贝构造
 		Computer& operator=(const Computer& other) = delete;//禁用...
-		void change_ip(const string& ip);
-		void change_port(int port, bool state);
 		//下面是移动语义，因为主函数用到了vector<Computer>这样的会在push_back调用拷贝函数，但是unique_ptr禁用了他
 		Computer(Computer&& other) noexcept = default;
 		Computer& operator=(Computer&& other) noexcept = default;
 		~Computer();
-
-		string id_to_ip(const int i);
 		Dir* get_root() const;
+		string id_to_ip(const int i);
 		const string get_ip() const;
+		string& get_ip();
 		const map<int, bool> get_ip_port() const;
+		map<int, bool>& get_ip_port();
 		const vector<string> get_ipconfig() const;
-		unordered_map<string, Account> get_account();
+		unordered_map<string, Account>& get_account();
 		const unordered_map<string, Account> get_account() const;//不知道此处何意味，不如直接public...
 		friend Computer SerializeJson::deserialize_computer(const json& j);
+		void write_log(const LogTarget l, const string& s);
 	private:
 		string ip;
+		map<int, bool> ip_port;//存储端口开关状态
 		unordered_map<string, Account> accounts;
-		map<int, bool> ip_port;
-		unique_ptr<Dir> root = make_unique<Dir>("/");
+
+		unique_ptr<Dir> root = make_unique<Dir>("/",nullptr);
 
 	};
 	class Session {//工具方法？还是保存一下吧
@@ -201,6 +211,12 @@ namespace ComputerComponents {
 		~Session();
 		void connect_to(Computer* target);
 		void change_dir(Dir* target);
+	};
+	enum class LogTarget {
+		Network,
+		System,
+		Command,
+		Application
 	};
 };
 
@@ -239,7 +255,47 @@ public:
 	void list_session();
 };
 namespace Net {
+	using namespace std;
+	struct Packet {
+		string source_ip;
+		string dest_ip;
+		string payload;
+		int ttl = 30;
+		int ms = 0;//延迟
+		int cosumed_resource = 32;
+		unordered_map<string, string> metadata;
+		Packet(const string& src, const string& dest, const string& p = "")
+			: source_ip(src), dest_ip(dest), payload(p){
+		}
+		void set_meta(const string& key, const string& value) {
+			metadata[key] = value;
+		}
+		string get_meta(const string& key) const {
+			if (metadata.count(key) > 0) {
+				return metadata.at(key);
+			}
+			return "";
+		}
+	};
+	class NetNode {
+	public://直接全部public算了
+		ComputerComponents::Computer* host;
+		string ip;
+		string name;
+		bool online = true;
+		int resource = 65536;
+		map<int, bool> ports;
+		vector<Packet> packets;
 
+		NetNode(const string& i, const string& n) : ip(i), name(n) , host(nullptr){};
+		void clear_packets();
+		bool receive(Packet& packet);
+		bool send(Packet& packet);
+		bool bind_host(ComputerComponents::Computer* computer);
+		bool unbind_host();
+		bool open_port(int port);
+		bool close_port(int port);
+	};
 }
 
 namespace Apps {
@@ -274,6 +330,7 @@ namespace Apps {
 		Nano();
 	};
 }
+
 //下面是一些全局函数
 // 
 //CommandFunction.cpp里的函数
@@ -313,9 +370,12 @@ std::string simple_fnv_hash(const std::string& key, const std::string& message);
 extern std::vector<ComputerComponents::Computer> world_computers;
 extern SessionManager session_manager;
 extern CommandComponents::CommandProcessor processor;
-extern std::mutex cout_mutex;
-extern std::mutex world_mutex;//全局互斥锁
+extern std::unordered_map<std::string, std::unique_ptr<Net::NetNode>> netnodes;
 extern bool is_chinese;
 extern int prolouge_num;
+extern std::mutex world_mutex;
+extern std::mutex cout_mutex;
 
 extern std::unordered_map<std::string, std::string> app_hash_map;//全局应用哈希签名
+extern std::mt19937 rng;
+using DelayMs = std::chrono::milliseconds;

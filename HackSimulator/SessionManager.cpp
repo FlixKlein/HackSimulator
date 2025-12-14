@@ -1,5 +1,5 @@
 ﻿/*
-|	HackSimulator v0.0.4
+|	HackSimulator v0.0.6
 |	
 |	SessionManager.cpp
 |	

@@ -13,6 +13,7 @@ E:\project\HackSimulator\HackSimulator\FileSystem.cpp;E:\project\HackSimulator\H
 E:\project\HackSimulator\HackSimulator\CommandFunction.cpp;E:\project\HackSimulator\HackSimulator\x64\Debug\CommandFunction.obj
 E:\project\HackSimulator\HackSimulator\HackSimulator.cpp;E:\project\HackSimulator\HackSimulator\x64\Debug\HackSimulator.obj
 E:\project\HackSimulator\HackSimulator\InitFunction.cpp;E:\project\HackSimulator\HackSimulator\x64\Debug\InitFunction.obj
+E:\project\HackSimulator\HackSimulator\Net.cpp;E:\project\HackSimulator\HackSimulator\x64\Debug\Net.obj
 E:\project\HackSimulator\HackSimulator\SerializeJson.cpp;E:\project\HackSimulator\HackSimulator\x64\Debug\SerializeJson.obj
 E:\project\HackSimulator\HackSimulator\SessionManager.cpp;E:\project\HackSimulator\HackSimulator\x64\Debug\SessionManager.obj
 E:\project\HackSimulator\HackSimulator\StoryFunction.cpp;E:\project\HackSimulator\HackSimulator\x64\Debug\StoryFunction.obj

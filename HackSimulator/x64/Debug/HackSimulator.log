@@ -1,20 +1,6 @@
-﻿  Apps.cpp
-E:\project\HackSimulator\HackSimulator\Apps.cpp(28,10): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-  CodingFunction.cpp
-  CommandComponents.cpp
-E:\project\HackSimulator\HackSimulator\CommandComponents.cpp(364,29): warning C4101: “e”: 未引用的局部变量
-E:\project\HackSimulator\HackSimulator\CommandComponents.cpp(383,33): warning C4101: “e”: 未引用的局部变量
-  CommandFunction.cpp
-  ComputerComponents.cpp
-  FileSystem.cpp
-  HackSimulator.cpp
-  InitFunction.cpp
-  SerializeJson.cpp
-  SessionManager.cpp
-  StoryFunction.cpp
-  TypingFunction.cpp
-  UIManager.cpp
-E:\project\HackSimulator\HackSimulator\UIManager.cpp(179,17): warning C4804: “<”: 在操作中使用类型“bool”不安全
-  正在生成代码...
+﻿  CommandComponents.cpp
+E:\project\HackSimulator\HackSimulator\CommandComponents.cpp(482,28): warning C4101: “e”: 未引用的局部变量
+E:\project\HackSimulator\HackSimulator\CommandComponents.cpp(505,33): warning C4101: “e”: 未引用的局部变量
+E:\project\HackSimulator\HackSimulator\CommandComponents.cpp(563,1): warning C4715: “CommandComponents::CommandProcessor::execute”: 不是所有的控件路径都返回值
   HackSimulator.vcxproj -> E:\project\HackSimulator\x64\Debug\HackSimulator.exe
   复制了 0 个文件

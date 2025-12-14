@@ -1,5 +1,5 @@
 /*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |
 |	Apps.cpp
 	this cpp implements Apps related classes and functions
@@ -23,6 +23,7 @@ namespace Apps {
 	using namespace CommandComponents;
 	using namespace std;
 
+	//Help
 	Help::Help() {
 		app_commands["help"] = [](Session& session, const vector<string>& args) -> int {
 			int n = args.size();
@@ -37,6 +38,13 @@ namespace Apps {
 				cout << "cat\t\t显示可读文件内容" << endl;
 				cout << "ipconfig\t\t显示当前网络信息" << endl;
 				cout << "cp\t\t复制文件或者文件夹" << endl;
+				cout << "read\t\t阅读剧情文本" << endl;
+				cout << "user\t\t用户账户管理" << endl;
+				cout << "ping\t\t测试与目标主机的连通性" << endl;
+				cout << "passwd\t\t修改当前用户密码" << endl;
+				cout << "login\t\t登录到账户" << endl;
+				cout << "logout\t\t退出当前账户" << endl;
+				cout << "touch\t\t创建空白文件" << endl;
 				cout << "start\t\t启动一个后台会话" << endl;
 				cout << "cl\t\t清空命令行窗口" << endl;
 				cout << "exec\t\t后台会话运行命令" << endl;
@@ -66,7 +74,9 @@ namespace Apps {
 	const string Help::get_hash() const {
 		return app_hash_map["help.exe"];
 	}
-
+	//Mail
+	
+	//Nano
 	Nano::Nano() {
 
 	}

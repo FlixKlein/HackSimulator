@@ -1,5 +1,5 @@
 /*
-|	HackSimulator v0.0.5
+|	HackSimulator v0.0.6
 |
 |	TypingFunction.cpp
 	this cpp is for some Typing functions
