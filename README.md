@@ -1,28 +1,26 @@
+[en](README.md)|[zh](README_ZH.md)
+A casually written simulated hacking game.
+
+The release version contains a Windows executable and some DLLs, along with story files.
+
+The rest are Visual Studio 2022 project files.
+
+HackSimulator contains the source code, and vendor contains necessary third-party libraries (imgui, sdl).
+
+Third-party libraries used: json, imgui, sdl, magic_enum
+
+v0.0.1 Basic file system completed
+
+v0.0.2 Implementation of JSON storage
+
+v0.0.4 cp command, multithreading, story introduction
+
+v0.0.5 user command, graphical window, application layer setup
+
+v0.0.6 Improved user operations, touch command, improved virtual network structure, ping
 
 
-随便写写的模拟黑客游戏
 
-release中是window可执行程序和一些dll，剧情文件
+The current story is just for testing and demonstration purposes, not the final version.
 
-其他的是VisualStudio2022项目文件
-
-HackSimulator是源代码，vendor是第三方必要库（imgui，sdl）
-
-第三方库：json，imgui，sdl，magic\_enum
-
-vo.o.1 文件系统的基本完成
-
-v0.0.2 json存储的实现
-
-v0.0.4 cp指令，多线程，剧情引入
-
-v0.0.5 user指令，图形化窗口，应用层搭建
-
-v0.0.6 用户操作完善，touch指令，虚拟网络结构完善,ping
-
-
-
-目前剧情只是凑数和测试，不是最终剧情。
-
-双语版本也是后续程序功能完善后再开发
-
+The bilingual version will be developed after the program's functionality is further improved.
