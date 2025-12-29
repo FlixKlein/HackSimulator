@@ -1,4 +1,5 @@
 [en](README.md)|[zh](README_ZH.md)
+
 A casually written simulated hacking game.
 
 The release version contains a Windows executable and some DLLs, along with story files.
